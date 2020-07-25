@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -63,25 +62,6 @@ namespace SignalR_Client
         private static void ReceiveMessage(DateTime Time, string User, string Message)
         {
             Console.WriteLine("{0:dd:MM:yy HH:mm:ss}[{1}]:{2}", Time, User, Message);
-        }
-    }
-
-    internal class UserMessage
-    {
-        public DateTime Time { get; set; }
-        public string User { get; set; }
-        public string Message { get; set; }
-    }
-
-    internal static class TaskEx
-    {
-        public static async Task<T> WithCancellation<T>([NotNull] this Task<T> task, CancellationToken cancel)
-        {
-            var source = new TaskCompletionSource<object>();
-            await using (cancel.Register(tcs => ((TaskCompletionSource<object>)tcs).TrySetResult(default), source))
-                if (task != await Task.WhenAny(task, source.Task))
-                    throw new TaskCanceledException();
-            return await task;
         }
     }
 }
